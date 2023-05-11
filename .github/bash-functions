@@ -33,7 +33,18 @@ lastTag() {
     | sort -V
 }
 
+updateChangelog() {
+  ## TODO
+}
+
+setIdentity() {
+  git config user.name github-actions
+  git config user.email github-actions@github.com
+}
+
 newRelease() {
+  git fetch --tags
+
   local version=$(getVersion)
 
   if hasTag $version; then
@@ -44,19 +55,11 @@ newRelease() {
     echo "Using project version"
   fi
 
-  ## TODO: changelog
+  updateChangelog
+
+  setIdentity
 
   git commit -am "Version: ${version}"
   git tag "${TAG_PREFIX}${version}"
   git push --tags
-}
-
-testFunctions() {
-  local version=$(getVersion)
-
-  if hasTag $version; then
-    echo "Creating new version"
-  else
-    echo "Using project version"
-  fi
 }

@@ -27,7 +27,7 @@ hasTag() {
 
 lastTag() {
   git log -1 --tags="${TAG_PREFIX}*" --format=tformat:%D \
-    | sed "s/, /\n/" \
+    | sed "s/, /\n/g" \
     | grep "tag: ${TAG_PREFIX}" \
     | awk '{print $2}' \
     | sort -V

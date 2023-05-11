@@ -60,9 +60,6 @@ newRelease() {
 
   setIdentity
 
-  git remote
-  git branch
-
   git commit -am "Version: ${version}"
   git tag "${TAG_PREFIX}${version}"
   git push --tags

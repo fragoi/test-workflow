@@ -62,5 +62,6 @@ newRelease() {
 
   git commit -am "Version: ${version}"
   git tag "${TAG_PREFIX}${version}"
-  git push --all --tags
+  git push --tags
+  git push
 }

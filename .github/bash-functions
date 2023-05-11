@@ -1,0 +1,52 @@
+#!/bin/bash -e
+
+TAG_PREFIX=v
+
+getVersion() {
+  cat version
+}
+
+setVersion() {
+  local version=$1
+  echo $version > version
+}
+
+nextVersion() {
+  local version=$1
+  local index=$2
+  local IFS=.
+  local nums=($version)
+  ((nums[index]++))
+  echo "${nums[*]}"
+}
+
+hasTag() {
+  local version=$1
+  git log -1 "${TAG_PREFIX}${version}" --
+}
+
+lastTag() {
+  git log -1 --tags="${TAG_PREFIX}*" --format=tformat:%D \
+    | sed "s/, /\n/" \
+    | grep "tag: ${TAG_PREFIX}" \
+    | awk '{print $2}' \
+    | sort -V
+}
+
+newRelease() {
+  local version=$(getVersion)
+
+  if hasTag $version; then
+    echo "Creating new version"
+    version=$(nextVersion $version 1)
+    setVersion $version
+  else
+    echo "Using project version"
+  fi
+
+  ## TODO: changelog
+
+  git commit -am "Version: ${version}"
+  git tag "${TAG_PREFIX}${version}"
+  git push --tags
+}

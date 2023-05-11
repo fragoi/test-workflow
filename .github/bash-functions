@@ -35,7 +35,7 @@ lastTag() {
 
 updateChangelog() {
   ## TODO
-  ls
+  return 0
 }
 
 setIdentity() {
@@ -44,17 +44,16 @@ setIdentity() {
 }
 
 newRelease() {
-  git fetch --tags
-
   local version=$(getVersion)
+
+  git fetch --tags
 
   if hasTag $version; then
     echo "Creating new version"
     version=$(nextVersion $version 1)
     setVersion $version
   else
-    echo "Using project version"if hasTag $version; then
-    echo "Creating new version"
+    echo "Using project version"
   fi
 
   updateChangelog

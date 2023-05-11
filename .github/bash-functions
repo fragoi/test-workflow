@@ -22,7 +22,7 @@ nextVersion() {
 
 hasTag() {
   local version=$1
-  git log -1 "${TAG_PREFIX}${version}" --
+  git log -1 --format=format:"Tag exists: %h" "${TAG_PREFIX}${version}" --
 }
 
 lastTag() {

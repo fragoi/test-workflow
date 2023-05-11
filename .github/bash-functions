@@ -35,6 +35,7 @@ lastTag() {
 
 updateChangelog() {
   ## TODO
+  ls
 }
 
 setIdentity() {
@@ -52,7 +53,8 @@ newRelease() {
     version=$(nextVersion $version 1)
     setVersion $version
   else
-    echo "Using project version"
+    echo "Using project version"if hasTag $version; then
+    echo "Creating new version"
   fi
 
   updateChangelog

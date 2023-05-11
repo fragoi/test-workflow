@@ -15,8 +15,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          source .github/bash-functions
-          getVersion
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+      - run: source .github/bash-functions
+      - run: testFunctions

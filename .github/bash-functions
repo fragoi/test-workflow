@@ -50,3 +50,13 @@ newRelease() {
   git tag "${TAG_PREFIX}${version}"
   git push --tags
 }
+
+testFunctions() {
+  local version=$(getVersion)
+
+  if hasTag $version; then
+    echo "Creating new version"
+  else
+    echo "Using project version"
+  fi
+}

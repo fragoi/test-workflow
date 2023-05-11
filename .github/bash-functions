@@ -46,7 +46,7 @@ setIdentity() {
 newRelease() {
   local version=$(getVersion)
 
-  git fetch --tags
+  git fetch --tags --quiet
 
   if hasTag $version; then
     echo "Creating new version"

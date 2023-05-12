@@ -68,6 +68,7 @@ mergeDev() {
   local branch=$(git branch --show-current)
   if [ "${branch}" != "${DEV_BRANCH}" ]; then
     git checkout $DEV_BRANCH
+    git pull
     git merge $branch
     git push
   fi
@@ -91,7 +92,7 @@ newRelease() {
 
   setIdentity
 
-  git commit -am "Version: ${version}" || echo "Nothing to commit"
+  git commit -am "Version: ${version}" || true
   git tag "${TAG_PREFIX}${version}"
   git push --tags
   git push

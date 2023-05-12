@@ -90,6 +90,6 @@ newRelease() {
 mergeDev() {
   setIdentity
   git branch -avv
-  echo git merge origin/main
+  git merge origin/main
   echo git push
 }

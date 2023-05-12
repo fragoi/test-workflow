@@ -1,32 +1,5 @@
-PACKAGE (1.9.6) unstable; urgency=medium
+PACKAGE (1.9.3) unstable; urgency=medium
 
-  * hola2
+  * Initial release
 
- -- Fra Goi <fragoidev@gmail.com>  Sat, 13 May 2023 01:10:06 +0200
-
-PACKAGE (1.9.5) unstable; urgency=medium
-
-  * hola
-
- -- Fra Goi <fragoidev@gmail.com>  Sat, 13 May 2023 01:09:46 +0200
-
-PACKAGE (1.9.4) unstable; urgency=medium
-
-  * hola
-
- -- Fra Goi <fragoidev@gmail.com>  Sat, 13 May 2023 01:07:56 +0200
-
-PACKAGE (1.9.4) unstable; urgency=medium
-
-  * (Fra) ddd
-  * (Fra) sdd
-  * hola
-
- -- Fra Goi <fragoidev@gmail.com>  Sat, 13 May 2023 01:07:45 +0200
-
-PACKAGE (1.9.1) unstable; urgency=medium
-
-  [ Fra Goi ]
-  * Initial version
-
- -- Fra Goi <fragoidev@gmail.com>  Fri, 12 May 2023 22:37:46 +0000
+ -- Fra Goi <fragoidev@gmail.com>  Sat, 13 May 2023 01:15:53 +0200

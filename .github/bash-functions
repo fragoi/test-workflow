@@ -91,7 +91,7 @@ newRelease() {
 
   setIdentity
 
-  git commit -am "Version: ${version}"
+  git commit -am "Version: ${version}" || echo "Nothing to commit"
   git tag "${TAG_PREFIX}${version}"
   git push --tags
   git push

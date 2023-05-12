@@ -80,6 +80,7 @@ newRelease() {
   updateChangelog
 
   setIdentity
+
   git commit -am "Version: ${version}" || true
   git tag "${TAG_PREFIX}${version}"
   git push --tags
@@ -89,6 +90,8 @@ newRelease() {
 merge() {
   local branch=$1
   setIdentity
-  git pull $branch
+  git pull --all --quiet
+  git branch -avv
+  git merge $branch
   git push
 }

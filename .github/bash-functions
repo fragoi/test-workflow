@@ -87,10 +87,11 @@ newRelease() {
   git push
 }
 
-mergeDev() {
+merge() {
+  local branch=$1
   setIdentity
   git pull --all
   git branch -avv
-  git merge origin/main
-  echo git push
+  git merge $branch
+  git push
 }

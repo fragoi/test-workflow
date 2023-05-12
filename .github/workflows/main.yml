@@ -29,4 +29,4 @@ jobs:
           ref: 'dev'
       - run: |
           source .github/bash-functions
-          mergeDev
+          merge main

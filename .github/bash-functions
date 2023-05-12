@@ -89,6 +89,7 @@ newRelease() {
 
 mergeDev() {
   setIdentity
+  git pull --all
   git branch -avv
   git merge origin/main
   echo git push

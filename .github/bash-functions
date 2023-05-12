@@ -54,8 +54,8 @@ nextVersionIndex() {
 }
 
 updateChangelog() {
-  ## TODO
-  return 0
+  local lastTag=$(lastTag)
+  git log --format=tformat:"(%an) %s" ${lastTag}..HEAD
 }
 
 setIdentity() {

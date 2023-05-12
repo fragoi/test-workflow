@@ -76,7 +76,7 @@ updateChangelog() {
 }
 
 setGitIdentity() {
-  git config user.name FragoiBot
+  git config user.name frabot
   git config user.email fragoidev@gmail.com
 }
 

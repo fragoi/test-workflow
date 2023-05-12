@@ -1,13 +1,6 @@
-PACKAGE (1.9.1) UNRELEASED; urgency=medium
-
-  [ Fra ]
-  * Initial version
-  * (Fra) Pippo ven 12 mag 2023, 23:23:00, CEST
-  * (Fra) Pippo ven 12 mag 2023, 22:49:06, CEST
+PACKAGE (1.9.1) unstable; urgency=medium
 
   [ Fra Goi ]
-  * (Fra) Pippo ven 12 mag 2023, 23:23:00, CEST
-  * (Fra) Pippo ven 12 mag 2023, 22:49:06, CEST
-  * (Fra) asas
+  * Initial version
 
  -- Fra Goi <fragoidev@gmail.com>  Fri, 12 May 2023 22:37:46 +0000

@@ -71,7 +71,6 @@ newRelease() {
   if hasTag $version; then
     echo "Creating new version"
     local index=$(nextVersionIndex)
-    echo "Version index: ${index}"
     version=$(nextVersion $version $index)
     setVersion $version
   else

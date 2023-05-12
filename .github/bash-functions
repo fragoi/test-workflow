@@ -89,8 +89,6 @@ newRelease() {
 merge() {
   local branch=$1
   setIdentity
-  git pull --all
-  git branch -avv
-  git merge $branch
+  git pull $branch
   git push
 }

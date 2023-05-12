@@ -54,7 +54,7 @@ nextVersionIndex() {
 }
 
 installDevscripts() {
-  apt update && apt install devscripts
+  sudo apt update && sudo apt install devscripts
 }
 
 setDebIdentity() {

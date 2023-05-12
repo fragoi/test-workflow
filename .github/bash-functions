@@ -64,16 +64,6 @@ setIdentity() {
   git config user.email github-actions@github.com
 }
 
-mergeDev() {
-  local branch=$(git branch --show-current)
-  if [ "${branch}" != "${DEV_BRANCH}" ]; then
-    git checkout $DEV_BRANCH
-    git log -1
-    git merge $branch
-    echo git push
-  fi
-}
-
 newRelease() {
   local version=$(getVersion)
 
@@ -96,6 +86,11 @@ newRelease() {
   git tag "${TAG_PREFIX}${version}"
   git push --tags
   git push
+}
 
-  mergeDev
+mergeDev() {
+  setIdentity
+  git branch -avv
+  echo git merge origin/main
+  echo git push
 }

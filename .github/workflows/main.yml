@@ -19,4 +19,14 @@ jobs:
       - run: |
           source .github/bash-functions
           newRelease
-          merge origin/main dev
+
+  merge-to-dev:
+    needs: [release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: 'dev'
+      - run: |
+          source .github/bash-functions
+          merge origin/main

@@ -91,9 +91,9 @@ merge() {
   local from=$1
   local to=$2
   setIdentity
-  git pull --all
   git branch -avv
   git checkout $to
+  git pull --all
   git merge $from
   git push
 }

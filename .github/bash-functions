@@ -53,6 +53,10 @@ nextVersionIndex() {
   isDevMerge && echo 1 || echo 2
 }
 
+installDevscripts() {
+  apt update && apt install devscripts
+}
+
 setDebIdentity() {
   export DEBFULLNAME="Fra Goi"
   export DEBEMAIL="fragoidev@gmail.com"
@@ -90,6 +94,7 @@ newRelease() {
     echo "Using project version"
   fi
 
+  installDevscripts
   setDebIdentity
   updateChangelog $version
 

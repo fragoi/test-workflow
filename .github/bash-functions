@@ -96,7 +96,7 @@ newRelease() {
 
   installDevscripts
   setDebIdentity
-  updateChangelog $version
+  updateChangelog "${version}-1"
 
   setGitIdentity
   git commit -am "Version: ${version}" || true

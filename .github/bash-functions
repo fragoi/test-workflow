@@ -69,7 +69,7 @@ mergeDev() {
   if [ "${branch}" != "${DEV_BRANCH}" ]; then
     git checkout $DEV_BRANCH
     git log -1
-    echo git merge $branch
+    git merge $branch
     echo git push
   fi
 }

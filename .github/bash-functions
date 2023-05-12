@@ -68,9 +68,9 @@ mergeDev() {
   local branch=$(git branch --show-current)
   if [ "${branch}" != "${DEV_BRANCH}" ]; then
     git checkout $DEV_BRANCH
-    git pull
-    git merge $branch
-    git push
+    git log -1
+    # git merge $branch
+    # git push
   fi
 }
 

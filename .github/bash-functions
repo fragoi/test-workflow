@@ -3,6 +3,8 @@
 TAG_PREFIX=v
 DEV_BRANCH=dev
 
+DEB_PACKAGE=test-workflows
+
 getVersion() {
   cat version
 }
@@ -64,9 +66,14 @@ setDebIdentity() {
 
 linesToChangeLog() {
   local version=$1
-  while read -r line; do
-    dch -v $version -D unstable "$line"
-  done
+  # while read -r line; do
+  #   dch -v $version -D unstable "$line"
+  # done
+  awk "
+    BEGIN { print \"${DEB_PACKAGE} (${version}) unstable; urgency=medium\n\"  }
+    { print \"  * \" \$0 }
+    END { print \"\n -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)\n\" }
+  "
 }
 
 updateChangelog() {
@@ -94,7 +101,7 @@ newRelease() {
     echo "Using project version"
   fi
 
-  installDevscripts
+  # installDevscripts
   setDebIdentity
   updateChangelog $version
 

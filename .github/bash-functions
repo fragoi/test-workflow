@@ -53,14 +53,27 @@ nextVersionIndex() {
   isDevMerge && echo 1 || echo 2
 }
 
-updateChangelog() {
-  local lastTag=$(lastTag)
-  git log --format=tformat:"(%an) %s" ${lastTag}..HEAD
+setDebIdentity() {
+  export DEBFULLNAME="Fra Goi"
+  export DEBEMAIL="fragoidev@gmail.com"
 }
 
-setIdentity() {
-  git config user.name github-actions
-  git config user.email github-actions@github.com
+linesToChangeLog() {
+  local version=$1
+  while read -r line; do
+    dch -v $version "$line"
+  done
+}
+
+updateChangelog() {
+  local version=$1
+  git log --format=tformat:"(%an) %s" $(lastTag)..HEAD \
+    | linesToChangeLog $version
+}
+
+setGitIdentity() {
+  git config user.name FragoiBot
+  git config user.email fragoidev@gmail.com
 }
 
 newRelease() {
@@ -77,9 +90,10 @@ newRelease() {
     echo "Using project version"
   fi
 
-  updateChangelog
+  setDebIdentity
+  updateChangelog $version
 
-  setIdentity
+  setGitIdentity
   git commit -am "Version: ${version}" || true
   git tag "${TAG_PREFIX}${version}"
   git push --tags
@@ -88,7 +102,7 @@ newRelease() {
 
 merge() {
   local branch=$1
-  setIdentity
+  setGitIdentity
   git fetch --all --quiet
   git branch -avv
   git merge $branch

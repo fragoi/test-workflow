@@ -28,6 +28,27 @@ nextVersion() {
   echo "${nums[*]}"
 }
 
+hasBranch() {
+  local branch=$1
+  git log -1 --format=tformat:%D \
+    | sed "s/, /\n/g" \
+    | grep -qE "\b${branch}\b"
+}
+
+isDevMerge() {
+  hasBranch $DEV_BRANCH
+}
+
+nextVersionIndex() {
+  isDevMerge && echo 1 || echo 2
+}
+
+nextBranchVersion() {
+  local version=$1
+  local index=$(nextVersionIndex)
+  nextVersion $version $index
+}
+
 hasTag() {
   local version=$1
   # git log -1 --format=oneline "${TAG_PREFIX}${version}" --
@@ -58,21 +79,6 @@ prevTag() {
     | sort -Vur \
     | grep -m 1 -A 1 -xF "$tag" \
     | tail -n +2
-}
-
-hasBranch() {
-  local branch=$1
-  git log -1 --format=tformat:%D \
-    | sed "s/, /\n/g" \
-    | grep -qE "\b${branch}\b"
-}
-
-isDevMerge() {
-  hasBranch $DEV_BRANCH
-}
-
-nextVersionIndex() {
-  isDevMerge && echo 1 || echo 2
 }
 
 ## Not used
@@ -117,8 +123,7 @@ newRelease() {
 
   if hasTag $version; then
     echo "Creating new version"
-    local index=$(nextVersionIndex)
-    version=$(nextVersion $version $index)
+    version=$(nextBranchVersion $version)
     setVersion $version
   else
     echo "Using project version"

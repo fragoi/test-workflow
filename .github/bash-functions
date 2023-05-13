@@ -104,7 +104,8 @@ changelogEntry() {
 updateChangelog() {
   local version=$1
   local prevTag=$(prevTag $version)
-  git fetch --shallow-exclude=$prevTag
+  echo "Prev tag: ${prevTag}"
+  # git fetch --shallow-exclude=$prevTag
   git log --format=tformat:"(%an) %s" ${prevTag}..HEAD \
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new
@@ -124,9 +125,10 @@ newRelease() {
   if hasTag $version; then
     echo "Creating new version"
     version=$(nextBranchVersion $version)
+    echo "Setting project version: ${version}"
     setVersion $version
   else
-    echo "Using project version"
+    echo "Using project version: ${version}"
   fi
 
   # installDevscripts

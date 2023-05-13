@@ -73,7 +73,8 @@ linesToChangeLog() {
     BEGIN { print \"${DEB_PACKAGE} (${version}) unstable; urgency=medium\n\"  }
     { print \"  * \" \$0 }
     END { print \"\n -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)\n\" }
-  "
+  " | cat - debian/changelog > debian/changelog.new
+  mv debian/changelog.new debian/changelog
 }
 
 updateChangelog() {

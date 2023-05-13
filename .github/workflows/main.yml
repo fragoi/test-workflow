@@ -30,4 +30,4 @@ jobs:
           ref: 'dev'
       - run: |
           source .github/bash-functions
-          merge origin/main
+          merge main

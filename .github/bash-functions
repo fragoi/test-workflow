@@ -2,6 +2,7 @@
 
 TAG_PREFIX=v
 DEV_BRANCH=dev
+REMOTE=origin
 
 DEB_PACKAGE=test-workflows
 
@@ -29,15 +30,34 @@ nextVersion() {
 
 hasTag() {
   local version=$1
-  git log -1 --format=oneline "${TAG_PREFIX}${version}" --
+  # git log -1 --format=oneline "${TAG_PREFIX}${version}" --
+  git ls-remote --exit-code --tags $REMOTE "${TAG_PREFIX}${version}"
 }
 
-lastTag() {
-  git log -1 --tags="${TAG_PREFIX}*" --format=tformat:%D \
-    | sed "s/, /\n/g" \
-    | grep "tag: ${TAG_PREFIX}" \
+listTags() {
+  git ls-remote --tags $REMOTE "${TAG_PREFIX}*" \
     | awk '{print $2}' \
-    | sort -V
+    | sed 's/^refs\/tags\///'
+}
+
+catAdd() {
+  cat -
+  echo $1
+}
+
+prevTag() {
+  local version=$1
+  local tag="${TAG_PREFIX}${version}"
+  # git log -1 --tags="${TAG_PREFIX}*" --format=tformat:%D \
+  #   | sed "s/, /\n/g" \
+  #   | grep "tag: ${TAG_PREFIX}" \
+  #   | awk '{print $2}' \
+  #   | sort -V
+  listTags \
+    | catAdd "$tag" \
+    | sort -Vur \
+    | grep -m 1 -A 1 -xF "$tag" \
+    | tail -n +2
 }
 
 hasBranch() {
@@ -65,23 +85,24 @@ setDebIdentity() {
   export DEBEMAIL="fragoidev@gmail.com"
 }
 
-linesToChangeLog() {
+changelogEntry() {
   local version=$1
-  # while read -r line; do
-  #   dch -v $version -D unstable "$line"
-  # done
-  awk "
-    BEGIN { print \"${DEB_PACKAGE} (${version}) unstable; urgency=medium\n\"  }
-    { print \"  * \" \$0 }
-    END { print \"\n -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)\n\" }
-  " | cat - debian/changelog > debian/changelog.new
-  mv debian/changelog.new debian/changelog
+  echo "${DEB_PACKAGE} (${version}) unstable; urgency=medium"
+  echo
+  sed 's/^/  * /'
+  echo
+  echo " -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)"
+  echo
 }
 
 updateChangelog() {
   local version=$1
-  git log --format=tformat:"(%an) %s" $(lastTag)..HEAD \
-    | linesToChangeLog $version
+  local prevTag=$(prevTag $version)
+  git fetch --shallow-exclude=$prevTag
+  git log --format=tformat:"(%an) %s" ${prevTag}..HEAD \
+    | changelogEntry $version \
+    | cat - debian/changelog > debian/changelog.new
+  mv debian/changelog.new debian/changelog
 }
 
 setGitIdentity() {
@@ -92,7 +113,7 @@ setGitIdentity() {
 newRelease() {
   local version=$(getVersion)
 
-  git fetch --tags --quiet
+  # git fetch --tags --quiet
 
   if hasTag $version; then
     echo "Creating new version"
@@ -117,7 +138,7 @@ newRelease() {
 merge() {
   local branch=$1
   setGitIdentity
-  git fetch --all --quiet
+  git fetch $REMOTE $branch
   git branch -avv
   git merge $branch
   git push

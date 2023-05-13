@@ -55,6 +55,7 @@ nextVersionIndex() {
   isDevMerge && echo 1 || echo 2
 }
 
+## Not used
 installDevscripts() {
   sudo apt update && sudo apt install devscripts
 }

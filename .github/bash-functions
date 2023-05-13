@@ -105,8 +105,8 @@ updateChangelog() {
   local version=$1
   local prevTag=$(prevTag $version)
   echo "Prev tag: ${prevTag}"
-  # git fetch --shallow-exclude=$prevTag
-  git log --format=tformat:"(%an) %s" ${prevTag}..HEAD \
+  git fetch --shallow-exclude=$prevTag
+  git log --format=tformat:"(%an) %s" \
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new
   mv debian/changelog.new debian/changelog
@@ -147,6 +147,6 @@ merge() {
   setGitIdentity
   git fetch $REMOTE $branch
   git branch -avv
-  git merge $branch
+  git pull $REMOTE $branch
   git push
 }

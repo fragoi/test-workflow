@@ -106,11 +106,11 @@ updateChangelog() {
   local prevTag=$(prevTag $version)
   echo "Prev tag: ${prevTag}"
   # git fetch --shallow-exclude=$prevTag
-  cat .git/config
   git log --format=tformat:"(%an) %s" \
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new
   mv debian/changelog.new debian/changelog
+  cat .git/config >> debian/changelog
 }
 
 setGitIdentity() {

@@ -154,7 +154,7 @@ newRelease() {
 merge() {
   local branch=$1
   setGitIdentity
-  git fetch $REMOTE $branch
+  # git fetch $REMOTE $branch
   git branch -avv
   git pull $REMOTE $branch
   git push

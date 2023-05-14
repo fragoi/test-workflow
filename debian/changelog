@@ -1,3 +1,9 @@
+test-workflows (1.10.3) unstable; urgency=medium
+
+  * (Fra) Merge branch 'main' of github.com:fragoi/test-workflow into main
+
+ -- Fra Goi <fragoidev@gmail.com>  Sun, 14 May 2023 11:51:15 +0000
+
 test-workflows (1.10.2) unstable; urgency=medium
 
   * (Fra) dsad
@@ -32,3 +38,18 @@ test-workflows (1.9.6) unstable; urgency=medium
   * Initial release
 
  -- Fra Goi <fragoidev@gmail.com>  Sat, 13 May 2023 00:11:52 +0000
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/fragoi/test-workflow
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[gc]
+	auto = 0
+[http "https://github.com/"]
+	extraheader = AUTHORIZATION: basic eC1hY2Nlc3MtdG9rZW46Z2hzX2xaSFRpdFhka2lIUTd5M1haVG1Zek85emlaT2tZNjJEeHNqUg==
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main

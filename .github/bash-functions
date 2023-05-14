@@ -119,14 +119,14 @@ setGitIdentity() {
 }
 
 setGitToken() {
-  local user=$1
-  local token=$2
-  local value=$(echo "${user}:${token}" | base64 -w 0)
-  echo $value
-  git config "http.https://github.com/.extraHeader" "Authorization: token ${token}"
+  local token=$1
+  local user=$(git config --get user.name)
+  local value=$(echo -n "${user}:${token}" | base64 -w 0)
+  git config "http.https://github.com/.extraHeader" "Authorization: Basic ${value}"
 }
 
 newRelease() {
+  echo "Token: ${GITHUB_TOKEN}"
   local version=$(getVersion)
 
   # git fetch --tags --quiet

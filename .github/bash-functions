@@ -104,13 +104,13 @@ changelogEntry() {
 updateChangelog() {
   local version=$1
   local prevTag=$(prevTag $version)
-  echo "Prev tag: ${prevTag}"
-  # git fetch --shallow-exclude=$prevTag
-  git log --format=tformat:"(%an) %s" \
+  local head=$(git log -1 --format=%H)
+  echo "Fetching commits from ${prevTag} to ${head}"
+  git fetch --shallow-exclude=$prevTag $REMOTE $head:changelog
+  git log --format=tformat:"(%an) %s" changelog \
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new
   mv debian/changelog.new debian/changelog
-  cat .git/config >> debian/changelog
 }
 
 setGitIdentity() {
@@ -126,7 +126,6 @@ setGitToken() {
 }
 
 newRelease() {
-  echo "Token: ${GITHUB_TOKEN}"
   local version=$(getVersion)
 
   # git fetch --tags --quiet

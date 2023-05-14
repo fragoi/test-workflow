@@ -51,7 +51,6 @@ nextBranchVersion() {
 
 hasTag() {
   local version=$1
-  # git log -1 --format=oneline "${TAG_PREFIX}${version}" --
   git ls-remote --exit-code --tags $REMOTE "${TAG_PREFIX}${version}"
 }
 
@@ -69,11 +68,6 @@ catAdd() {
 prevTag() {
   local version=$1
   local tag="${TAG_PREFIX}${version}"
-  # git log -1 --tags="${TAG_PREFIX}*" --format=tformat:%D \
-  #   | sed "s/, /\n/g" \
-  #   | grep "tag: ${TAG_PREFIX}" \
-  #   | awk '{print $2}' \
-  #   | sort -V
   listTags \
     | catAdd "$tag" \
     | sort -Vur \
@@ -81,10 +75,9 @@ prevTag() {
     | tail -n +2
 }
 
-## Not used
-installDevscripts() {
-  sudo apt update && sudo apt install devscripts
-}
+# installDevscripts() {
+#   sudo apt update && sudo apt install devscripts
+# }
 
 setDebIdentity() {
   export DEBFULLNAME="Fra Goi"
@@ -118,17 +111,15 @@ setGitIdentity() {
   git config user.email fragoidev@gmail.com
 }
 
-setGitToken() {
-  local token=$1
-  local user=$(git config --get user.name)
-  local value=$(echo -n "${user}:${token}" | base64 -w 0)
-  git config "http.https://github.com/.extraHeader" "Authorization: Basic ${value}"
-}
+# setGitToken() {
+#   local token=$1
+#   local user=$(git config --get user.name)
+#   local value=$(echo -n "${user}:${token}" | base64 -w 0)
+#   git config "http.https://github.com/.extraHeader" "Authorization: Basic ${value}"
+# }
 
 newRelease() {
   local version=$(getVersion)
-
-  # git fetch --tags --quiet
 
   if hasTag $version; then
     echo "Creating new version"
@@ -139,7 +130,6 @@ newRelease() {
     echo "Using project version: ${version}"
   fi
 
-  # installDevscripts
   setDebIdentity
   updateChangelog $version
 
@@ -153,7 +143,6 @@ newRelease() {
 merge() {
   local branch=$1
   setGitIdentity
-  # git fetch $REMOTE $branch
   git branch -avv
   git pull $REMOTE $branch
   git push

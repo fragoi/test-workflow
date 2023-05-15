@@ -69,7 +69,7 @@ changelogEntry() {
 updateVersion() {
   local version=$(getVersion)
   if existTag $version; then
-    echo "Creating new version"
+    echo "Increasing patch version"
     version=$(nextVersion $version $V_PATCH)
     echo "Setting project version: ${version}"
     setVersion $version
@@ -119,21 +119,33 @@ createRelease() {
 }
 
 updateDev() {
+  local branch=$1
   local version=$(getVersion)
 
-  if ! existTag $version; then
-    echo "Nothing to do"
-    return
+  setGitIdentity
+
+  echo "Merging branch: ${branch}"
+  if ! git pull --ff $REMOTE $branch; then
+    local vv=$(git ls-files -u version | wc -l)
+    if [ "$vv" = "3" ]; then
+      echo "Version file conflict detected"
+      setVersion $version
+      git add version
+      git merge --continue
+    else
+      echo "Merge failed"
+      return 1
+    fi
   fi
 
-  echo "Merging release: ${version}"
-  git pull $REMOTE "${TAG_PREFIX}${version}"
+  if existTag $version; then
+    echo "Increasing minor version"
+    version=$(nextVersion $version $V_MINOR)
+    echo "Setting project version: ${version}"
+    setVersion $version
 
-  version=$(nextVersion $version $V_MINOR)
-  echo "Setting project version: ${version}"
-  setVersion $version
+    git commit -am "Next development version: ${version}"
+  fi
 
-  setGitIdentity
-  git commit -am "Next version: ${version}"
   git push
 }

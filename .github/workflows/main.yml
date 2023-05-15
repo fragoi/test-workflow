@@ -30,4 +30,4 @@ jobs:
           ref: 'dev'
       - run: |
           source .github/bash-functions
-          updateDev
+          updateDev main

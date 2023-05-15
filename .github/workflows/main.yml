@@ -16,7 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
+      - name: Create release
+        run: |
           source .github/bash-functions
           createRelease
 
@@ -28,6 +29,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: 'dev'
-      - run: |
+      - name: Update dev branch
+        run: |
           source .github/bash-functions
           updateDev main

@@ -15,6 +15,14 @@ setVersion() {
   echo $version > version
 }
 
+getVersionNum() {
+  local version=$1
+  local index=$2
+  local IFS=.
+  local nums=($version)
+  echo ${nums[index]}
+}
+
 nextVersion() {
   local version=$1
   local index=$2
@@ -26,6 +34,13 @@ nextVersion() {
     (( nums[index] = 0 ))
   done
   echo "${nums[*]}"
+}
+
+isPatchVersion() {
+  local version=$1
+  ## Assume we have <major>.<minor>.<patch>
+  local patch=$(getVersionNum $version 2)
+  [ -n "$patch" ] && [ "$patch" != "0" ]
 }
 
 hasBranch() {
@@ -49,7 +64,7 @@ nextBranchVersion() {
   nextVersion $version $index
 }
 
-hasTag() {
+existTag() {
   local version=$1
   git ls-remote --exit-code --tags $REMOTE "${TAG_PREFIX}${version}"
 }
@@ -118,10 +133,29 @@ setGitIdentity() {
 #   git config "http.https://github.com/.extraHeader" "Authorization: Basic ${value}"
 # }
 
+updateVersion() {
+  local version=$(getVersion)
+
+  if existTag $version; then
+    echo "Creating new version"
+
+    local prevTag="${TAG_PREFIX}${version}"
+    git fetch --shallow-exclude=$prevTag $REMOTE $DEV_BRANCH:$DEV_BRANCH
+    local nondev=$(git log -1 --format=%H $DEV_BRANCH..)
+    local index=$([ -z "$nondev" ] && echo 2 || echo 1)
+
+    version=$(nextVersion $version $index)
+    echo "Setting project version: ${version}"
+    setVersion $version
+  else
+    echo "Using project version: ${version}"
+  fi
+}
+
 newRelease() {
   local version=$(getVersion)
 
-  if hasTag $version; then
+  if existTag $version; then
     echo "Creating new version"
     version=$(nextBranchVersion $version)
     echo "Setting project version: ${version}"

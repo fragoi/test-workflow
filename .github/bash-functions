@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+V_MINOR=1
+V_PATCH=2
+
 TAG_PREFIX=v
 DEV_BRANCH=dev
 REMOTE=origin
@@ -38,8 +41,7 @@ nextVersion() {
 
 isPatchVersion() {
   local version=$1
-  ## Assume we have <major>.<minor>.<patch>
-  local patch=$(getVersionNum $version 2)
+  local patch=$(getVersionNum $version $V_PATCH)
   [ -n "$patch" ] && [ "$patch" != "0" ]
 }
 
@@ -94,11 +96,6 @@ prevTag() {
 #   sudo apt update && sudo apt install devscripts
 # }
 
-setDebIdentity() {
-  export DEBFULLNAME="Fra Goi"
-  export DEBEMAIL="fragoidev@gmail.com"
-}
-
 changelogEntry() {
   local version=$1
   echo "${DEB_PACKAGE} (${version}) unstable; urgency=medium"
@@ -107,23 +104,6 @@ changelogEntry() {
   echo
   echo " -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)"
   echo
-}
-
-updateChangelog() {
-  local version=$1
-  local prevTag=$(prevTag $version)
-  local head=$(git log -1 --format=%H)
-  echo "Fetching commits from ${prevTag} to ${head}"
-  git fetch --shallow-exclude=$prevTag $REMOTE $head:changelog
-  git log --format=tformat:"(%an) %s" changelog \
-    | changelogEntry $version \
-    | cat - debian/changelog > debian/changelog.new
-  mv debian/changelog.new debian/changelog
-}
-
-setGitIdentity() {
-  git config user.name frabot
-  git config user.email fragoidev@gmail.com
 }
 
 # setGitToken() {
@@ -135,16 +115,9 @@ setGitIdentity() {
 
 updateVersion() {
   local version=$(getVersion)
-
   if existTag $version; then
     echo "Creating new version"
-
-    local prevTag="${TAG_PREFIX}${version}"
-    git fetch --shallow-exclude=$prevTag $REMOTE $DEV_BRANCH:$DEV_BRANCH
-    local nondev=$(git log -1 --format=%H $DEV_BRANCH..)
-    local index=$([ -z "$nondev" ] && echo 2 || echo 1)
-
-    version=$(nextVersion $version $index)
+    version=$(nextVersion $version $V_PATCH)
     echo "Setting project version: ${version}"
     setVersion $version
   else
@@ -152,32 +125,62 @@ updateVersion() {
   fi
 }
 
-newRelease() {
+updateChangelog() {
   local version=$(getVersion)
+  local prevTag=$(prevTag $version)
+  local head=$(git log -1 --format=%H)
+  echo "Fetching commits from ${prevTag} to ${head}"
+  git fetch --shallow-exclude=$prevTag $REMOTE $head:changelog
+  git log --format=tformat:"(%an) %s" changelog \
+    | changelogEntry $version \
+    | cat - debian/changelog > debian/changelog.new
+  mv debian/changelog.new debian/changelog
+}
 
-  if existTag $version; then
-    echo "Creating new version"
-    version=$(nextBranchVersion $version)
-    echo "Setting project version: ${version}"
-    setVersion $version
-  else
-    echo "Using project version: ${version}"
-  fi
-
-  setDebIdentity
-  updateChangelog $version
-
-  setGitIdentity
+createTag() {
+  local version=$(getVersion)
   git commit -am "Version: ${version}" || true
   git tag "${TAG_PREFIX}${version}"
   git push --tags
   git push
 }
 
-merge() {
-  local branch=$1
+setDebIdentity() {
+  export DEBFULLNAME="Fra Goi"
+  export DEBEMAIL="fragoidev@gmail.com"
+}
+
+setGitIdentity() {
+  git config user.name frabot
+  git config user.email fragoidev@gmail.com
+}
+
+createRelease() {
+  updateVersion
+
+  setDebIdentity
+  updateChangelog
+
   setGitIdentity
-  git branch -avv
-  git pull $REMOTE $branch
+  createTag
+}
+
+updateDev() {
+  local version=$(getVersion)
+
+  if ! existTag $version; then
+    echo "Nothing to do"
+    return
+  fi
+
+  echo "Merging release: ${version}"
+  git pull $REMOTE "${TAG_PREFIX}${version}"
+
+  version=$(nextVersion $version $V_MINOR)
+  echo "Setting project version: ${version}"
+  setVersion $version
+
+  setGitIdentity
+  git commit -am "New version: ${version}"
   git push
 }

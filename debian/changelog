@@ -1,3 +1,10 @@
+test-workflows (2.3.0) unstable; urgency=medium
+
+  * (Fra) Merge versions
+  * (frabot) Next version: 2.3.0
+
+ -- Fra Goi <fragoidev@gmail.com>  Mon, 15 May 2023 21:03:22 +0000
+
 test-workflows (2.2.0) unstable; urgency=medium
 
   * (Fra) Merge branch 'dev' of github.com:fragoi/test-workflow into main

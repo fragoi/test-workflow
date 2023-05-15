@@ -4,7 +4,6 @@ V_MINOR=1
 V_PATCH=2
 
 TAG_PREFIX=v
-DEV_BRANCH=dev
 REMOTE=origin
 
 DEB_PACKAGE=test-workflows
@@ -18,14 +17,6 @@ setVersion() {
   echo $version > version
 }
 
-getVersionNum() {
-  local version=$1
-  local index=$2
-  local IFS=.
-  local nums=($version)
-  echo ${nums[index]}
-}
-
 nextVersion() {
   local version=$1
   local index=$2
@@ -37,33 +28,6 @@ nextVersion() {
     (( nums[index] = 0 ))
   done
   echo "${nums[*]}"
-}
-
-isPatchVersion() {
-  local version=$1
-  local patch=$(getVersionNum $version $V_PATCH)
-  [ -n "$patch" ] && [ "$patch" != "0" ]
-}
-
-hasBranch() {
-  local branch=$1
-  git log -1 --format=tformat:%D \
-    | sed "s/, /\n/g" \
-    | grep -qE "\b${branch}\b"
-}
-
-isDevMerge() {
-  hasBranch $DEV_BRANCH
-}
-
-nextVersionIndex() {
-  isDevMerge && echo 1 || echo 2
-}
-
-nextBranchVersion() {
-  local version=$1
-  local index=$(nextVersionIndex)
-  nextVersion $version $index
 }
 
 existTag() {
@@ -92,10 +56,6 @@ prevTag() {
     | tail -n +2
 }
 
-# installDevscripts() {
-#   sudo apt update && sudo apt install devscripts
-# }
-
 changelogEntry() {
   local version=$1
   echo "${DEB_PACKAGE} (${version}) unstable; urgency=medium"
@@ -105,13 +65,6 @@ changelogEntry() {
   echo " -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)"
   echo
 }
-
-# setGitToken() {
-#   local token=$1
-#   local user=$(git config --get user.name)
-#   local value=$(echo -n "${user}:${token}" | base64 -w 0)
-#   git config "http.https://github.com/.extraHeader" "Authorization: Basic ${value}"
-# }
 
 updateVersion() {
   local version=$(getVersion)

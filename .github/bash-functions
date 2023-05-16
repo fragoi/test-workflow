@@ -127,7 +127,7 @@ resolveVersionConflict() {
     echo "Reset version file from HEAD"
     git show :2:version > version
     git add version
-    git merge --continue
+    git merge --continue -m "Reset version file from HEAD"
   else
     git merge --abort
     return 1

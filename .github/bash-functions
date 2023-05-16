@@ -146,18 +146,15 @@ updateBranch() {
   # git fetch --progress --shallow-exclude=$current $REMOTE $other || true
   # git fetch --progress --deepen=1 $REMOTE $current || true
 
-  git fetch --progress $REMOTE $branch
-
-  local msg="Merge branch ${current} with ${other}"
-  echo "Merge message: ${msg}"
-  git merge -m "$msg" "$REMOTE/$other" || resolveVersionConflict
+  git fetch --progress $REMOTE $other
+  git merge "$REMOTE/$other" || resolveVersionConflict
 }
 
 updateDev() {
-  local branch=$1
+  local other=$1
 
   setGitIdentity
-  git pull --progress --ff $REMOTE $branch || resolveVersionConflict
+  updateBranch $other
 
   updateVersion $V_MINOR
 

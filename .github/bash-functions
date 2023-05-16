@@ -158,5 +158,5 @@ updateDev() {
 
   local version=$(getVersion)
   git commit -m "Next development version: ${version}" || true
-  # git push
+  git push
 }

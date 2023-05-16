@@ -146,8 +146,7 @@ updateBranch() {
   # git fetch --progress --shallow-exclude=$current $REMOTE $other || true
   # git fetch --progress --deepen=1 $REMOTE $current || true
 
-  git fetch --progress $REMOTE $other
-  git merge "$REMOTE/$other" || resolveVersionConflict
+  git pull --progress --ff $REMOTE $other || resolveVersionConflict
 }
 
 updateDev() {

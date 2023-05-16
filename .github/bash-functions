@@ -147,7 +147,8 @@ updateBranch() {
 
   git fetch --progress $REMOTE $branch
 
-  git merge --no-edit "$REMOTE/$other" || resolveVersionConflict
+  local msg="Merge branch ${current} with ${other}"
+  git merge -m "$msg" "$REMOTE/$other" || resolveVersionConflict
 }
 
 updateDev() {

@@ -141,9 +141,11 @@ updateBranch() {
   echo "Merging branch ${current} with ${other}"
 
   ## Fetch minimal history from both branches
-  git fetch --progress --shallow-exclude=$other $REMOTE $current || true
-  git fetch --progress --shallow-exclude=$current $REMOTE $other || true
-  git fetch --progress --deepen=1 $REMOTE $current || true
+  # git fetch --progress --shallow-exclude=$other $REMOTE $current || true
+  # git fetch --progress --shallow-exclude=$current $REMOTE $other || true
+  # git fetch --progress --deepen=1 $REMOTE $current || true
+
+  git fetch --progress $REMOTE $branch
 
   git merge "$REMOTE/$other" || resolveVersionConflict
 }
@@ -152,7 +154,7 @@ updateDev() {
   local branch=$1
 
   setGitIdentity
-  git pull --progress --ff $REMOTE $branch || resolveVersionConflict
+  updateBranch $branch || resolveVersionConflict
 
   updateVersion $V_MINOR
 

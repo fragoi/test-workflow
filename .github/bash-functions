@@ -127,7 +127,8 @@ resolveVersionConflict() {
     echo "Reset version file from HEAD"
     git show :2:version > version
     git add version
-    git merge --continue -m "Reset version file from HEAD"
+    sed 's/\t/  /g' .git/MERGE_MSG \
+      | git commit -F -
   else
     git merge --abort
     return 1
@@ -156,7 +157,7 @@ updateDev() {
   local branch=$1
 
   setGitIdentity
-  updateBranch $branch || resolveVersionConflict
+  git pull --progress --ff $REMOTE $branch || resolveVersionConflict
 
   updateVersion $V_MINOR
 
@@ -164,3 +165,23 @@ updateDev() {
   git commit -m "Next development version: ${version}" || true
   git push
 }
+
+# updateDev() {
+#   local version=$(getVersion)
+
+#   if ! existTag $version; then
+#     echo "Nothing to do"
+#     return
+#   fi
+
+#   echo "Merging release: ${version}"
+#   git pull --progress --ff $REMOTE "${TAG_PREFIX}${version}" || true
+
+#   version=$(nextVersion $version $V_MINOR)
+#   echo "Setting project version: ${version}"
+#   setVersion $version
+
+#   setGitIdentity
+#   git commit -am "Next version: ${version}"
+#   git push
+# }

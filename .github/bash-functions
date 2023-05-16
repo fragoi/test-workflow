@@ -141,11 +141,11 @@ updateBranch() {
   echo "Merging branch ${current} with ${other}"
 
   ## Fetch minimal history from both branches
-  git fetch --shallow-exclude=$other $REMOTE $current || true
-  git fetch --shallow-exclude=$current $REMOTE $other || true
-  git fetch --deepen=1 $REMOTE $current || true
+  # git fetch --shallow-exclude=$other $REMOTE $current || true
+  # git fetch --shallow-exclude=$current $REMOTE $other || true
+  # git fetch --deepen=1 $REMOTE $current || true
 
-  git merge "${REMOTE}/${other}" || resolveVersionConflict
+  git pull $REMOTE $other || resolveVersionConflict
 }
 
 updateDev() {

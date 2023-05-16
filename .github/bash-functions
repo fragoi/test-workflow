@@ -148,7 +148,7 @@ updateBranch() {
   # git fetch --progress --deepen=1 $REMOTE $current || true
 
   git fetch --progress $REMOTE $other
-  git merge -m "$msg" "$REMOTE/$other" || resolveVersionConflict $msg
+  git merge -m "$msg" "$REMOTE/$other" || resolveVersionConflict "$msg"
 }
 
 updateDev() {

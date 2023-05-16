@@ -1,3 +1,10 @@
+test-workflows (2.8.0) unstable; urgency=medium
+
+  * (Fra) fasf
+  * (frabot) Merge branch 'main' of https://github.com/fragoi/test-workflow into dev
+
+ -- Fra Goi <fragoidev@gmail.com>  Tue, 16 May 2023 21:36:09 +0000
+
 test-workflows (2.7.1) unstable; urgency=medium
 
   * (Fra) Doing some patch mar 16 mag 2023, 18:49:00, CEST

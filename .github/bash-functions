@@ -148,6 +148,7 @@ updateBranch() {
   git fetch --progress $REMOTE $branch
 
   local msg="Merge branch ${current} with ${other}"
+  echo "Merge message: ${msg}"
   git merge -m "$msg" "$REMOTE/$other" || resolveVersionConflict
 }
 

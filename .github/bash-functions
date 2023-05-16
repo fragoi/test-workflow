@@ -6,7 +6,7 @@ V_PATCH=2
 TAG_PREFIX=v
 REMOTE=origin
 
-DEB_PACKAGE=test-workflows
+DEB_PACKAGE=package
 
 getVersion() {
   cat version
@@ -67,12 +67,14 @@ changelogEntry() {
 }
 
 updateVersion() {
+  local index=$1
   local version=$(getVersion)
   if existTag $version; then
-    echo "Increasing patch version"
-    version=$(nextVersion $version $V_PATCH)
+    echo "Increasing version at position ${index}"
+    version=$(nextVersion $version $index)
     echo "Setting project version: ${version}"
     setVersion $version
+    git add version
   else
     echo "Using project version: ${version}"
   fi
@@ -88,11 +90,12 @@ updateChangelog() {
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new
   mv debian/changelog.new debian/changelog
+  git add debian/changelog
 }
 
 createTag() {
   local version=$(getVersion)
-  git commit -am "Version: ${version}" || true
+  git commit -m "Version: ${version}" || true
   git tag "${TAG_PREFIX}${version}"
   git push --tags
   git push
@@ -109,7 +112,7 @@ setGitIdentity() {
 }
 
 createRelease() {
-  updateVersion
+  updateVersion $V_PATCH
 
   setDebIdentity
   updateChangelog
@@ -118,34 +121,42 @@ createRelease() {
   createTag
 }
 
+resolveVersionConflict() {
+  local vv=$(git ls-files -u version | wc -l)
+  if [ "$vv" = "3" ]; then
+    echo "Reset version file from HEAD"
+    git show :2:version > version
+    git add version
+    git merge --continue
+  else
+    git merge --abort
+    return 1
+  fi
+}
+
+updateBranch() {
+  local other=$1
+  local current=$(git branch --show-current)
+
+  echo "Merging branch ${current} with ${other}"
+
+  ## Fetch minimal history from both branches
+  git fetch --shallow-exclude=$other $REMOTE $current
+  git fetch --shallow-exclude=$current $REMOTE $other
+  git fetch --deepen=1 $REMOTE $current
+
+  git merge "${REMOTE}/${other}" || resolveVersionConflict
+}
+
 updateDev() {
   local branch=$1
-  local version=$(getVersion)
 
   setGitIdentity
+  updateBranch $branch
 
-  echo "Merging branch: ${branch}"
-  if ! git pull --ff $REMOTE $branch; then
-    local vv=$(git ls-files -u version | wc -l)
-    if [ "$vv" = "3" ]; then
-      echo "Version file conflict detected"
-      setVersion $version
-      git add version
-      git merge --continue
-    else
-      echo "Merge failed"
-      return 1
-    fi
-  fi
+  updateVersion $V_MINOR
 
-  if existTag $version; then
-    echo "Increasing minor version"
-    version=$(nextVersion $version $V_MINOR)
-    echo "Setting project version: ${version}"
-    setVersion $version
-
-    git commit -am "Next development version: ${version}"
-  fi
-
+  local version=$(getVersion)
+  git commit -m "Next development version: ${version}" || true
   git push
 }

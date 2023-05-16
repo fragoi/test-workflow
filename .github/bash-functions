@@ -141,9 +141,9 @@ updateBranch() {
   echo "Merging branch ${current} with ${other}"
 
   ## Fetch minimal history from both branches
-  git fetch --shallow-exclude=$other $REMOTE $current
-  git fetch --shallow-exclude=$current $REMOTE $other
-  git fetch --deepen=1 $REMOTE $current
+  git fetch --shallow-exclude=$other $REMOTE ${current}:${current}
+  git fetch --shallow-exclude=$current $REMOTE ${other}:${other}
+  git fetch --deepen=1 $REMOTE ${current}:${current}
 
   git merge "${REMOTE}/${other}" || resolveVersionConflict
 }

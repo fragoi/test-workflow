@@ -122,13 +122,13 @@ createRelease() {
 }
 
 resolveVersionConflict() {
+  local msg=$1
   local vv=$(git ls-files -u version | wc -l)
   if [ "$vv" = "3" ]; then
     echo "Reset version file from HEAD"
     git show :2:version > version
     git add version
-    sed 's/\t/  /g' .git/MERGE_MSG \
-      | git commit -F -
+    git commit -m "$msg"
   else
     git merge --abort
     return 1
@@ -138,8 +138,9 @@ resolveVersionConflict() {
 updateBranch() {
   local other=$1
   local current=$(git branch --show-current)
+  local msg="Merge branch ${current} with ${other}"
 
-  echo "Merging branch ${current} with ${other}"
+  echo $msg
 
   ## Fetch minimal history from both branches
   # git fetch --progress --shallow-exclude=$other $REMOTE $current || true
@@ -147,7 +148,7 @@ updateBranch() {
   # git fetch --progress --deepen=1 $REMOTE $current || true
 
   git fetch --progress $REMOTE $other
-  git merge "$REMOTE/$other" || resolveVersionConflict
+  git merge -m "$msg" "$REMOTE/$other" || resolveVersionConflict $msg
 }
 
 updateDev() {

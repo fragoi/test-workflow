@@ -152,7 +152,7 @@ updateDev() {
   local branch=$1
 
   setGitIdentity
-  git pull --progress $REMOTE $branch || resolveVersionConflict
+  git pull --progress --ff $REMOTE $branch || resolveVersionConflict
 
   updateVersion $V_MINOR
 

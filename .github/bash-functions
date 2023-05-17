@@ -124,8 +124,8 @@ createRelease() {
 resolveVersionConflict() {
   local vv=$(git ls-files -u version | wc -l)
   if [ "$vv" = "3" ]; then
-    echo "Reset version file from HEAD"
-    git show :2:version > version
+    echo "Restore version file from HEAD"
+    git restore --ours version
     git add version
     sed 's/\t/  /g' .git/MERGE_MSG \
       | git commit -F -

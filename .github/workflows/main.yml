@@ -34,4 +34,4 @@ jobs:
       - name: Update dev branch
         run: |
           source .github/bash-functions
-          updateDev main
+          #updateDev main

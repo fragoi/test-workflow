@@ -19,7 +19,7 @@ jobs:
       - name: Create release
         run: |
           source .github/bash-functions
-          DEB_PACKAGE=test-workflows
+          DEBPACKAGE=test-workflows
           createRelease
 
   merge-to-dev:
@@ -30,8 +30,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: 'dev'
-          fetch-depth: 0
       - name: Update dev branch
         run: |
           source .github/bash-functions
-          #updateDev main
+          updateDev main dev

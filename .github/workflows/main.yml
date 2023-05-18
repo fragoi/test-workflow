@@ -19,7 +19,7 @@ jobs:
       - name: Create release
         run: |
           source .github/bash-functions
-          DEB_PACKAGE=test-workflows
+          DEBPACKAGE=test-workflows
           createRelease
 
   merge-to-dev:

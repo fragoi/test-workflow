@@ -169,10 +169,12 @@ shallowMerge() {
 }
 
 updateDev() {
-  local other=$1
+  local branch=$1
+  local into=$2
 
   setGitIdentity
-  updateBranch $other
+  # updateBranch $branch
+  shallowMerge $branch $into
 
   updateVersion $V_MINOR
 

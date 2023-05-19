@@ -44,7 +44,7 @@ listTags() {
 
 catAdd() {
   cat -
-  echo $1
+  echo "$@"
 }
 
 prevTag() {
@@ -55,6 +55,13 @@ prevTag() {
     | sort -Vur \
     | grep -m 1 -A 1 -xF "$tag" \
     | tail -n +2
+}
+
+shortlog() {
+  local glp='git log --stdin --no-walk=unsorted --format=%H'
+  $glp --invert-grep --author='frabot' \
+    | $glp --invert-grep --grep='Merge( remote-tracking)? branch' -E \
+    | $glp --format=tformat:%s
 }
 
 changelogEntry() {
@@ -87,7 +94,8 @@ updateChangelog() {
   local head=$(git log -1 --format=%H)
   echo "Fetching commits from ${prevTag} to ${head}"
   git fetch --progress --shallow-exclude=$prevTag $REMOTE $head:changelog
-  git log --format=tformat:"(%an) %s" changelog \
+  git log --format=%H changelog \
+    | shortlog \
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new
   mv debian/changelog.new debian/changelog

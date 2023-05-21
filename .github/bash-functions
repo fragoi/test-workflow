@@ -86,8 +86,8 @@ prevSeries() {
   listTags \
     | catAdd "$tag" \
     | sort -Vur \
-    | $(tailAfter "$tag") \
-    | $(filterSeries)
+    | (tailAfter "$tag") \
+    | (filterSeries)
 }
 
 fetchChangelog() {

@@ -72,13 +72,14 @@ tailAfter() {
 filterSeries() {
   local line=""
   if ! read line; then
-    return
+    return 0
   fi
   echo $line
   local pattern="${line%.[0-9]}.[0-9]"
   while read line && [[ "$line" = $pattern ]]; do
     echo $line
   done
+  return 0
 }
 
 prevSeries() {

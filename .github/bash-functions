@@ -100,7 +100,8 @@ fetchChangelog() {
 
   local head=$(git log -1 --format=%H)
   echo 1>&2 "Fetching commits from ${shallow:-"begin"} to ${head}"
-  git fetch --progress ${shallow:+"--shallow-exclude=${shallow}"} \
+  git fetch --progress --no-tags \
+    ${shallow:+"--shallow-exclude=${shallow}"} \
     $REMOTE $head:changelog \
     ${filter:+"refs/tags/${filter}:refs/tags/${filter}"}
   echo 1>&2 "Filtering commits from ${filter:-"begin"} to ${head}"

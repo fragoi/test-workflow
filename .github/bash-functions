@@ -1,7 +1,5 @@
 #!/bin/bash -e
 
-set -o pipefail
-
 V_MINOR=1
 V_PATCH=2
 
@@ -9,6 +7,8 @@ TAG_PREFIX=v
 REMOTE=origin
 
 DEBPACKAGE=package
+
+alias readt='read -t 10'
 
 getVersion() {
   cat version
@@ -62,22 +62,22 @@ prevTag() {
 tailAfter() {
   local value=$1
   local line=""
-  while read -t 10 line && [ "$line" != "$value" ]; do
+  while readt line && [ "$line" != "$value" ]; do
     true ## Doing nothing
   done
-  while read -t 10 line; do
+  while readt line; do
     echo $line
   done
 }
 
 filterSeries() {
   local line=""
-  if ! read -t 10 line; then
+  if ! readt line; then
     return
   fi
   echo $line
   local pattern="${line%.[0-9]}.[0-9]"
-  while read -t 10 line && [[ "$line" = $pattern ]]; do
+  while readt line && [[ "$line" = $pattern ]]; do
     echo $line
   done
 }

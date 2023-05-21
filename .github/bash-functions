@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+set -o pipefail
+
 V_MINOR=1
 V_PATCH=2
 

@@ -8,7 +8,7 @@ REMOTE=origin
 
 DEBPACKAGE=package
 
-alias readt='read -t 10'
+READ='read -t 10'
 
 getVersion() {
   cat version
@@ -62,22 +62,22 @@ prevTag() {
 tailAfter() {
   local value=$1
   local line=""
-  while readt line && [ "$line" != "$value" ]; do
+  while $READ line && [ "$line" != "$value" ]; do
     true ## Doing nothing
   done
-  while readt line; do
+  while $READ line; do
     echo $line
   done
 }
 
 filterSeries() {
   local line=""
-  if ! readt line; then
+  if ! $READ line; then
     return
   fi
   echo $line
   local pattern="${line%.[0-9]}.[0-9]"
-  while readt line && [[ "$line" = $pattern ]]; do
+  while $READ line && [[ "$line" = $pattern ]]; do
     echo $line
   done
 }

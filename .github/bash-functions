@@ -57,6 +57,54 @@ prevTag() {
     | tail -n +2
 }
 
+tailAfter() {
+  local value=$1
+  local line=""
+  while read line && [ "$line" != "$value" ]; do
+    true ## Doing nothing
+  done
+  while read line; do
+    echo $line
+  done
+}
+
+filterSeries() {
+  local line=""
+  if ! read line; then
+    return
+  fi
+  echo $line
+  local pattern="${line%.[0-9]}.[0-9]"
+  while read line && [[ "$line" = $pattern ]]; do
+    echo $line
+  done
+}
+
+prevSeries() {
+  local version=$1
+  local tag="${TAG_PREFIX}${version}"
+  listTags \
+    | catAdd "$tag" \
+    | sort -Vur \
+    | tailAfter "$tag" \
+    | filterSeries
+}
+
+fetchChangelog() {
+  local version=$1
+  local series=($(prevSeries $version))
+  local filter=${series[1]:+${series[0]}}
+  local shallow=${series[0]:+${series[-1]}}
+
+  local head=$(git log -1 --format=%H)
+  echo 1>&2 "Fetching commits from ${shallow:-"begin"} to ${head}"
+  git fetch --progress ${shallow:+"--shallow-exclude=${shallow}"} \
+    $REMOTE $head:changelog \
+    ${filter:+"refs/tags/${filter}:refs/tags/${filter}"}
+  echo 1>&2 "Filtering commits from ${filter:-"begin"} to ${head}"
+  git log --first-parent --format=%H ${filter:+"${filter}.."}changelog --
+}
+
 shortlog() {
   local glp='git log --stdin --no-walk=unsorted --format=%H'
   $glp --author='^(?!frabot)' -P \
@@ -90,11 +138,7 @@ updateVersion() {
 
 updateChangelog() {
   local version=$(getVersion)
-  local prevTag=$(prevTag $version)
-  local head=$(git log -1 --format=%H)
-  echo "Fetching commits from ${prevTag} to ${head}"
-  git fetch --progress --shallow-exclude=$prevTag $REMOTE $head:changelog
-  git log --first-parent --format=%H changelog \
+  fetchChangelog $version \
     | shortlog \
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new

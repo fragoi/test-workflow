@@ -1,3 +1,9 @@
+test-workflows (2.19.0) unstable; urgency=medium
+
+  * fix changelog
+
+ -- Fra Goi <fragoidev@gmail.com>  Sun, 21 May 2023 16:07:41 +0000
+
 test-workflows (2.18.0) unstable; urgency=medium
 
   * Doing some dev ven 19 mag 2023, 17:44:09, CEST

@@ -62,22 +62,22 @@ prevTag() {
 tailAfter() {
   local value=$1
   local line=""
-  while read line && [ "$line" != "$value" ]; do
+  while read -t 10 line && [ "$line" != "$value" ]; do
     true ## Doing nothing
   done
-  while read line; do
+  while read -t 10 line; do
     echo $line
   done
 }
 
 filterSeries() {
   local line=""
-  if ! read line; then
+  if ! read -t 10 line; then
     return
   fi
   echo $line
   local pattern="${line%.[0-9]}.[0-9]"
-  while read line && [[ "$line" = $pattern ]]; do
+  while read -t 10 line && [[ "$line" = $pattern ]]; do
     echo $line
   done
 }

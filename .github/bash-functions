@@ -64,9 +64,8 @@ tailAfter() {
     true ## Doing nothing
   done
   while read line; do
-    echo "$line"
+    echo $line
   done
-  echo
 }
 
 filterSeries() {
@@ -74,10 +73,10 @@ filterSeries() {
   if ! read line; then
     return
   fi
-  echo "$line"
+  echo $line
   local pattern="${line%.[0-9]}.[0-9]"
   while read line && [[ "$line" = $pattern ]]; do
-    echo "$line"
+    echo $line
   done
 }
 

@@ -20,8 +20,8 @@ jobs:
         run: |
           source .github/bash-functions
           DEBPACKAGE=test-workflows
-          #createRelease
-          prevSeries $(getVersion)
+          createRelease
+          # prevSeries $(getVersion)
 
   merge-to-dev:
     needs: [release]

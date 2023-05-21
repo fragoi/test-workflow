@@ -66,6 +66,7 @@ tailAfter() {
   while read line; do
     echo $line
   done
+  return 0
 }
 
 filterSeries() {

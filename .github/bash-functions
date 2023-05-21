@@ -92,7 +92,7 @@ prevSeries() {
 
 fetchChangelog() {
   local version=$1
-  local series=($(prevSeries $version))
+  local series=("$(prevSeries $version)")
   local filter=${series[1]:+${series[0]}}
   local shallow=${series[0]:+${series[-1]}}
 

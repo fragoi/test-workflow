@@ -39,6 +39,17 @@ nextVersion() {
   echo "${nums[*]}"
 }
 
+seriesPrefix() {
+  local base=$1
+  local pattern="^${TAG_PREFIX}"
+  local i
+  for (( i = 0; i < V_PATCH; i++ )); do
+    pattern+="[0-9]+\."
+  done
+  [[ "$base" =~ $pattern ]]
+  echo $BASH_REMATCH
+}
+
 getTagId() {
   local version=$1
   git ls-remote --tags $REMOTE "${TAG_PREFIX}${version}" \
@@ -56,15 +67,15 @@ catAdd() {
   echo "$@"
 }
 
-prevTag() {
-  local version=$1
-  local tag="${TAG_PREFIX}${version}"
-  listTags \
-    | catAdd "$tag" \
-    | sort -Vur \
-    | grep -m 1 -A 1 -xF "$tag" \
-    | tail -n +2
-}
+# prevTag() {
+#   local version=$1
+#   local tag="${TAG_PREFIX}${version}"
+#   listTags \
+#     | catAdd "$tag" \
+#     | sort -Vur \
+#     | grep -m 1 -A 1 -xF "$tag" \
+#     | tail -n +2
+# }
 
 tailAfter() {
   local value=$1
@@ -85,9 +96,13 @@ filterSeries() {
   if ! read line; then
     return 0
   fi
-  echo $line
-  local pattern="${line%.+([0-9])}.+([0-9])"
+  local pattern=$(seriesPrefix $line)
+  if [ -z "$pattern" ]; then
+    return 1
+  fi
+  pattern+="*"
   debug "Series pattern: ${pattern}"
+  echo $line
   while read line; do
     if [[ "$line" = $pattern ]]; then
       echo $line

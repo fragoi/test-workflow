@@ -21,7 +21,6 @@ jobs:
           source .github/bash-functions
           DEB_PACKAGE=test-workflows
           createRelease
-          # prevSeries $(getVersion)
 
   merge-to-dev:
     needs: [release]

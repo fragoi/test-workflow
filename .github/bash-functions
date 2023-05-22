@@ -59,25 +59,29 @@ prevTag() {
     | tail -n +2
 }
 
+readt() {
+  read -t 10 "$@"
+}
+
 tailAfter() {
   local value=$1
   local line=""
-  while $READ line && [ "$line" != "$value" ]; do
+  while readt line && [ "$line" != "$value" ]; do
     true ## Doing nothing
   done
-  while $READ line; do
+  while readt line; do
     echo $line
   done
 }
 
 filterSeries() {
   local line=""
-  if ! $READ line; then
+  if ! readt line; then
     return
   fi
   echo $line
   local pattern="${line%.[0-9]}.[0-9]"
-  while $READ line && [[ "$line" = $pattern ]]; do
+  while readt line && [[ "$line" = $pattern ]]; do
     echo $line
   done
 }

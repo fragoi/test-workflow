@@ -66,10 +66,6 @@ prevTag() {
     | tail -n +2
 }
 
-readt() {
-  read -t 10 "$@"
-}
-
 tailAfter() {
   local value=$1
   local line=""
@@ -81,6 +77,7 @@ tailAfter() {
   fi
   while read line; do
     echo $line
+    debug "Ret val: $?"
   done
 }
 
@@ -92,7 +89,7 @@ filterSeries() {
   echo $line
   local pattern="${line%.+([0-9])}.+([0-9])"
   debug "Series pattern: ${pattern}"
-  while read line; do
+  while read line && [[ "$line" = $pattern ]]; do
     if [[ "$line" = $pattern ]]; then
       echo $line
     fi

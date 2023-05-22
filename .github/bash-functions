@@ -87,7 +87,7 @@ tailAfter() {
 filterSeries() {
   local line=""
   if ! readt line; then
-    return 1
+    return 0
   fi
   echo $line
   local pattern="${line%.+([0-9])}.+([0-9])"

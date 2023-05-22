@@ -76,6 +76,9 @@ tailAfter() {
   while readt line && [ "$line" != "$value" ]; do
     true ## Doing nothing
   done
+  if [ "$line" != "$value" ]; then
+    return 1
+  fi
   while readt line; do
     echo $line
   done
@@ -84,13 +87,15 @@ tailAfter() {
 filterSeries() {
   local line=""
   if ! readt line; then
-    return
+    return 1
   fi
   echo $line
   local pattern="${line%.+([0-9])}.+([0-9])"
   debug "Series pattern: ${pattern}"
-  while readt line && [[ "$line" = $pattern ]]; do
-    echo $line
+  while readt line; do
+    if [[ "$line" = $pattern ]]; then
+      echo $line
+    fi
   done
 }
 

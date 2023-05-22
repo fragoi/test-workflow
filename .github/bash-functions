@@ -87,7 +87,7 @@ filterSeries() {
     return
   fi
   echo $line
-  local pattern="${line%.[0-9]}.[0-9]"
+  local pattern="${line%.+([0-9])}.+([0-9])"
   debug "Series pattern: ${pattern}"
   while readt line && [[ "$line" = $pattern ]]; do
     echo $line

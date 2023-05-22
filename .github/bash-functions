@@ -6,9 +6,12 @@ V_PATCH=2
 TAG_PREFIX=v
 REMOTE=origin
 
-DEBPACKAGE=package
+DEB_PACKAGE=package
+DEB_FULLNAME="Fra Goi"
+DEB_EMAIL="fragoidev@gmail.com"
 
-READ='read -t 10'
+GIT_USER_NAME="frabot"
+GIT_USER_EMAIL="fragoidev@gmail.com"
 
 getVersion() {
   cat version
@@ -121,11 +124,11 @@ shortlog() {
 
 changelogEntry() {
   local version=$1
-  echo "${DEBPACKAGE} (${version}) unstable; urgency=medium"
+  echo "${DEB_PACKAGE} (${version}) unstable; urgency=medium"
   echo
   sed 's/^/  * /'
   echo
-  echo " -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -R)"
+  echo " -- ${DEB_FULLNAME} <${DEB_EMAIL}>  $(date -R)"
   echo
 }
 
@@ -162,13 +165,13 @@ createTag() {
 }
 
 setDebIdentity() {
-  export DEBFULLNAME="Fra Goi"
-  export DEBEMAIL="fragoidev@gmail.com"
+  export DEBFULLNAME=$DEB_FULLNAME
+  export DEBEMAIL=$DEB_EMAIL
 }
 
 setGitIdentity() {
-  git config user.name frabot
-  git config user.email fragoidev@gmail.com
+  git config user.name $GIT_USER_NAME
+  git config user.email $GIT_USER_EMAIL
 }
 
 createRelease() {

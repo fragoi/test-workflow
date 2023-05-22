@@ -19,7 +19,7 @@ jobs:
       - name: Create release
         run: |
           source .github/bash-functions
-          DEBPACKAGE=test-workflows
+          DEB_PACKAGE=test-workflows
           createRelease
           # prevSeries $(getVersion)
 

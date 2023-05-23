@@ -127,18 +127,18 @@ fetchChangelog() {
   local filter=${series[1]:+${series[0]}}
   local shallow=${series[0]:+${series[-1]}}
 
-  local head=$(git log -1 --format=%H)
+  local head=$(git rev-list -1)
   debug "Fetching commits from ${shallow:-"begin"} to ${head}"
   git fetch --progress --no-tags \
     ${shallow:+"--shallow-exclude=${shallow}"} \
     $REMOTE $head:changelog \
     ${filter:+"refs/tags/${filter}:refs/tags/${filter}"}
   debug "Filtering commits from ${filter:-"begin"} to ${head}"
-  git log --first-parent --format=%H ${filter:+"${filter}.."}changelog --
+  git rev-list --first-parent ${filter:+"${filter}.."}changelog --
 }
 
 shortlog() {
-  local glp='git log --stdin --no-walk=unsorted --format=%H'
+  local glp='git rev-list --stdin --no-walk=unsorted'
   $glp --author="^(?!${GIT_USER_NAME})" -P \
     | $glp --invert-grep --grep='Merge( remote-tracking)? branch' -E \
     | $glp --format=tformat:%s
@@ -152,6 +152,11 @@ changelogEntry() {
   echo
   echo " -- ${DEB_FULLNAME} <${DEB_EMAIL}>  $(date -R)"
   echo
+}
+
+hasChangelog() {
+  local version=$1
+  head -1 debian/changelog | grep -qF "(${version}"
 }
 
 updateVersion() {
@@ -170,6 +175,9 @@ updateVersion() {
 
 updateChangelog() {
   local version=$(getVersion)
+  if hasChangelog $version; then
+    return 0
+  fi
   fetchChangelog $version \
     | shortlog \
     | changelogEntry $version \

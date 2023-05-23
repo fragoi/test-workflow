@@ -127,7 +127,7 @@ fetchChangelog() {
   local filter=${series[1]:+${series[0]}}
   local shallow=${series[0]:+${series[-1]}}
 
-  local head=$(git rev-list -1)
+  local head=$(git rev-list -1 HEAD)
   debug "Fetching commits from ${shallow:-"begin"} to ${head}"
   git fetch --progress --no-tags \
     ${shallow:+"--shallow-exclude=${shallow}"} \

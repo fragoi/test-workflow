@@ -1,3 +1,10 @@
+test-workflows (3.1.0) unstable; urgency=medium
+
+  * Use functions from main
+  * Version file as variable
+
+ -- Fra Goi <fragoidev@gmail.com>  Tue, 23 May 2023 14:35:54 +0000
+
 test-workflows (3.0.0) unstable; urgency=medium
 
   * Version 3

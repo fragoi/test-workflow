@@ -140,7 +140,7 @@ shortlog() {
   local glp='git log --stdin --no-walk=unsorted --format=%H'
   $glp --author='^(?!frabot)' -P \
     | $glp --invert-grep --grep='Merge( remote-tracking)? branch' -E \
-    | $glp --format=tformat:%s
+    | grep '.' && $glp --format=tformat:%s || echo "$@"
 }
 
 changelogEntry() {
@@ -170,7 +170,7 @@ updateVersion() {
 updateChangelog() {
   local version=$(getVersion)
   fetchChangelog $version \
-    | shortlog \
+    | shortlog "Bump version ${version}" \
     | changelogEntry $version \
     | cat - debian/changelog > debian/changelog.new
   mv debian/changelog.new debian/changelog

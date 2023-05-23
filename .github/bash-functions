@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+V_FILE=version
 V_MINOR=1
 V_PATCH=2
 
@@ -18,12 +19,12 @@ debug() {
 }
 
 getVersion() {
-  cat version
+  cat $V_FILE
 }
 
 setVersion() {
   local version=$1
-  echo $version > version
+  echo $version > $V_FILE
 }
 
 nextVersion() {
@@ -138,7 +139,7 @@ fetchChangelog() {
 
 shortlog() {
   local glp='git log --stdin --no-walk=unsorted --format=%H'
-  $glp --author='^(?!frabot)' -P \
+  $glp --author="^(?!${GIT_USER_NAME})" -P \
     | $glp --invert-grep --grep='Merge( remote-tracking)? branch' -E \
     | $glp --format=tformat:%s
 }
@@ -161,7 +162,7 @@ updateVersion() {
     version=$(nextVersion $version $index)
     echo "Setting project version: ${version}"
     setVersion $version
-    git add version
+    git add $V_FILE
   else
     echo "Using project version: ${version}"
   fi
@@ -206,11 +207,11 @@ createRelease() {
 }
 
 resolveVersionConflict() {
-  local vv=$(git ls-files -u version | wc -l)
+  local vv=$(git ls-files -u $V_FILE | wc -l)
   if [ "$vv" = "3" ]; then
-    echo "Fix version file conflict using ours"
-    git restore --ours version
-    git add version
+    echo "Fix ${V_FILE} file conflict using ours"
+    git restore --ours $V_FILE
+    git add $V_FILE
     sed 's/\t/  /g' .git/MERGE_MSG \
       | git commit -F -
   else

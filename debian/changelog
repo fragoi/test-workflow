@@ -1,3 +1,9 @@
+test-workflows (3.2.4) unstable; urgency=medium
+
+  * git log
+
+ -- Fra Goi <fragoidev@gmail.com>  Tue, 23 May 2023 20:42:46 +0000
+
 test-workflows (3.2.3) unstable; urgency=medium
 
   * commit b788512635665b2ad5d65f7cee4dc6d7cb1ce1c2

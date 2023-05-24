@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: fragoi/bash-actions
+      - uses: fragoi/bash-actions@main
       - name: Test bash actions
         run: |
           source bash-functions

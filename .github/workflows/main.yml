@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  DEBCHANGELOG: 'y'
+  DEBCHANGELOG: y
 
 jobs:
 

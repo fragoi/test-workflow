@@ -3,7 +3,7 @@ name: Test workflow
 on:
   push:
     branches:
-      - 'main'
+      - main
 
 permissions:
   contents: write

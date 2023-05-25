@@ -10,6 +10,8 @@ permissions:
 
 env:
   DEBCHANGELOG: y
+  GIT_USER_NAME: Fra Bot
+  GIT_USER_EMAIL: fragoibot@gmail.com
 
 jobs:
 

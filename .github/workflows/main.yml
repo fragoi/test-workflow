@@ -20,6 +20,7 @@ jobs:
       - uses: fragoi/bash-actions@main
       - name: Create release
         run: |
+          env
           source bash-functions
           createRelease
 

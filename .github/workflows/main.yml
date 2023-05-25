@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - 'main'
-    tags-ignore:
-      - 'v*'
 
 permissions:
   contents: write
+
+env:
+  DEBCHANGELOG: y
 
 jobs:
 
@@ -20,7 +21,6 @@ jobs:
       - name: Create release
         run: |
           source bash-functions
-          DEB_PACKAGE=test-workflows
           createRelease
 
   merge-to-dev:
@@ -35,4 +35,4 @@ jobs:
       - name: Update dev branch
         run: |
           source bash-functions
-          updateDev main dev
+          updateDev main

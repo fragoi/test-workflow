@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: 'dev'
+          ref: dev
       - uses: fragoi/bash-actions@main
       - name: Update dev branch
         run: |

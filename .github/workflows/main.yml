@@ -12,6 +12,8 @@ env:
   GIT_USER_NAME: Fra Bot
   GIT_USER_EMAIL: fragoibot@gmail.com
   DEBCHANGELOG: y
+  DEBFULLNAME: Fra Goi
+  DEBEMAIL: fragoidev@gmail.com
 
 jobs:
 

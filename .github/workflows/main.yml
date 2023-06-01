@@ -47,4 +47,5 @@ jobs:
     steps:
       - run: echo '${{ secrets.MY_SECRET }}' > my_secret_file
       - uses: fragoi/ppa-release-action@main
+      - run: wc -c my_secret_file
       - run: rm my_secret_file

@@ -1,3 +1,9 @@
+test-workflow (3.4.16) UNRELEASED; urgency=medium
+
+  * Add inputs to action
+
+ -- Fra Goi <fragoidev@gmail.com>  Thu, 01 Jun 2023 20:39:54 +0000
+
 test-workflow (3.4.15) UNRELEASED; urgency=medium
 
   * Count bytes

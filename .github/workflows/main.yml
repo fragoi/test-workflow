@@ -40,3 +40,11 @@ jobs:
         run: |
           source bash-functions
           updateDev main
+
+  test-ppa:
+    needs: [release]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ secrets.MY_SECRET }}' > my_secret_file
+      - uses: fragoi/ppa-release-action@main
+      - run: rm my_secret_file

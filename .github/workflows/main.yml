@@ -1,7 +1,6 @@
 name: Test workflow
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -50,3 +49,5 @@ jobs:
         with:
           sign_key: ${{ secrets.MY_SECRET }}
           upload_key: ${{ secrets.MY_SECRET }}
+      - run: echo "Hola"
+      - run: echo "Mundo"

@@ -1,3 +1,9 @@
+test-workflow (3.4.22) UNRELEASED; urgency=medium
+
+  * Add workflow id
+
+ -- Fra Goi <fragoidev@gmail.com>  Fri, 09 Jun 2023 15:33:29 +0000
+
 test-workflow (3.4.21) UNRELEASED; urgency=medium
 
   * Trigger PPA release workflow

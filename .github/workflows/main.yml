@@ -51,6 +51,8 @@ jobs:
     steps:
       - uses: fragoi/bash-actions@main
       - name: Run PPA Release workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           source bash-functions
           TAG="${TAG_PREFIX}${{ needs.release.outputs.version }}"

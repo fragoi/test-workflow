@@ -19,13 +19,17 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.createRelease.outputs.version }}
     steps:
       - uses: actions/checkout@v3
       - uses: fragoi/bash-actions@main
-      - name: Create release
+      - id: createRelease
+        name: Create release
         run: |
           source bash-functions
           createRelease
+          echo "version=$(getVersion)" >> GITHUB_OUTPUT
 
   merge-to-dev:
     needs: [release]
@@ -45,9 +49,10 @@ jobs:
     needs: [release]
     runs-on: ubuntu-latest
     steps:
-      - uses: fragoi/ppa-release-action@main
-        with:
-          sign_key: ${{ secrets.MY_SECRET }}
-          upload_key: ${{ secrets.MY_SECRET }}
-      - run: echo "Hola"
-      - run: echo "Mundo"
+      - uses: fragoi/bash-actions@main
+      - name: Run PPA Release workflow
+        run: |
+          source bash-functions
+          TAG="${TAG_PREFIX}${{ needs.release.outputs.version }}"
+          URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${TAG}.tar.gz"
+          gh workflow run -R fragoi/ppa-release -f url="$URL" -f ppa="ppa:fragoi/test"

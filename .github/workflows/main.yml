@@ -55,4 +55,7 @@ jobs:
           source bash-functions
           TAG="${TAG_PREFIX}${{ needs.release.outputs.version }}"
           URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${TAG}.tar.gz"
-          gh workflow run -R fragoi/ppa-release -f url="$URL" -f ppa="ppa:fragoi/test"
+          gh workflow run main.yml \
+            -R fragoi/ppa-release \
+            -f url="$URL" \
+            -f ppa="ppa:fragoi/test"

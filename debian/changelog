@@ -1,3 +1,9 @@
+test-workflow (3.4.25) UNRELEASED; urgency=medium
+
+  * Test token
+
+ -- Fra Goi <fragoidev@gmail.com>  Sat, 10 Jun 2023 21:35:23 +0000
+
 test-workflow (3.4.24) UNRELEASED; urgency=medium
 
   * Add actions permission

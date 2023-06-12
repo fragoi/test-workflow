@@ -1,3 +1,9 @@
+test-workflow (3.4.26) UNRELEASED; urgency=medium
+
+  * Remove PPA release
+
+ -- Fra Goi <fragoidev@gmail.com>  Mon, 12 Jun 2023 09:43:08 +0000
+
 test-workflow (3.4.25) UNRELEASED; urgency=medium
 
   * Test token

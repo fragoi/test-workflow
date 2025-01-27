@@ -1,20 +1,18 @@
-name: Test workflow
+name: Create release
 
 on:
   push:
     branches:
       - main
+    paths-ignore:
+      - .github/**
 
 permissions:
   contents: write
-  actions: write
 
 env:
   GIT_USER_NAME: Fra Bot
   GIT_USER_EMAIL: fragoibot@gmail.com
-  DEBCHANGELOG: y
-  DEBFULLNAME: Fra Goi
-  DEBEMAIL: fragoidev@gmail.com
 
 jobs:
 
@@ -23,10 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: fragoi/bash-actions@main
-      - id: createRelease
-        name: Create release
+      - name: Create release
         run: |
-          source bash-functions
           createRelease
 
   merge-to-dev:
@@ -40,5 +36,4 @@ jobs:
       - uses: fragoi/bash-actions@main
       - name: Update dev branch
         run: |
-          source bash-functions
           updateDev main

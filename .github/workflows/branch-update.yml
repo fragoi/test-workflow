@@ -1,4 +1,4 @@
-name: .branch-update
+name: ~branch-update
 
 on:
   workflow_call:

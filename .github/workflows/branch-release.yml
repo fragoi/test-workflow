@@ -1,4 +1,4 @@
-name: .branch-release
+name: ~branch-release
 
 on:
   workflow_call:

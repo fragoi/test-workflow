@@ -1,14 +1,17 @@
-name: Create release
+name: Release and update
 
 on:
   push:
     branches:
       - main
+      - v6
     paths-ignore:
       - .github/**
+  workflow_dispatch:
 
 permissions:
   contents: write
+  packages: write
 
 env:
   GIT_USER_NAME: Fra Bot
@@ -17,23 +20,16 @@ env:
 jobs:
 
   release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: fragoi/bash-actions@main
-      - name: Create release
-        run: |
-          createRelease
+    uses: ./.github/workflows/branch-release.yml
 
-# merge-to-dev:
-#   needs: [release]
-#   runs-on: ubuntu-latest
-#   continue-on-error: true
-#   steps:
-#     - uses: actions/checkout@v3
-#       with:
-#         ref: dev
-#     - uses: fragoi/bash-actions@main
-#     - name: Update dev branch
-#       run: |
-#         updateDev main
+  update:
+    if: ${{ github.ref_name == 'main' }}
+    needs: release
+    strategy:
+      max-parallel: 1
+      matrix:
+        branch:
+          - v6
+    uses: ./.github/workflows/branch-update.yml
+    with:
+      branch: ${{ matrix.branch }}

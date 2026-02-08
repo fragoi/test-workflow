@@ -28,9 +28,8 @@ jobs:
       - uses: fragoi/bash-actions@v1
       - name: List series branches
         id: series
-        env:
-          REMOTE: ${{ github.repositoryUrl }}
         run: |
+          export REMOTE=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}
           branches=$(listBranches 'v[0-9]*')
           branches=$(toJSONArray $branches)
           output "branches=${branches}"
